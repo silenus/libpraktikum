@@ -3,6 +3,7 @@ LDFLAGS=
 
 GPP=g++
 CC=gcc
+DOXY=doxygen
 
 OBJECTS=utils.o
 SUBDIRS=
@@ -22,7 +23,7 @@ $(SUBDIRS):
 	@cd $@; $(MAKE);
 
 doc:
-	@echo "DOC\t<<FIXME:WRITE DOXYGEN HERE>>";
+	$(DOXY) Doxygen;
 
 clean:
 	@echo "CLEAN";
