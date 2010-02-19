@@ -5,7 +5,7 @@ GPP=g++
 CC=gcc
 DOXY=doxygen
 
-OBJECTS=utils.o
+OBJECTS=utils.o data.o
 SUBDIRS=
 
 .PHONY: all clean doc $(SUBDIRS)
