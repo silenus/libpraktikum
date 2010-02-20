@@ -81,6 +81,21 @@ double Data::getMax(const unsigned int n) {
 	}
 }
 
+double *getValuesBetween(const unsigned int col, const double first, const double second, int &count) {
+	int i, j;
+	if (first < second) {
+		for (i = 0; data[n][i] < first && i < length-1; i++);
+		for (j = 0; data[n][j] < second && j < length-1; j++);
+	}
+	else {
+		for (i = 0; data[n][i] > first && i < length-1; i++);
+		for (j = 0; data[n][j] > second && j < length-1; j++);
+	}
+	count = j - i + 1;
+	return &data[n][i];
+}
+
+
 // private functions
 //------------------------------
 

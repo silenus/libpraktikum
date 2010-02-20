@@ -14,7 +14,8 @@
 
 using namespace std;
 
-/** \class Data \brief Stores data of physical experiments.
+/** \class Data
+ * \brief Stores data of physical experiments.
  *
  */
 class Data
@@ -47,10 +48,18 @@ class Data
 				return NULL;
 		}
 
-		double *getCol(const unsigned int n, const double min, const double max, int &count);
+		/** \brief Get the values between two limits.
+		 *
+		 * \param[in] col The column which is searched
+		 * \param[in] first The first limit
+		 * \param[in] second The second limit
+		 * \param[out] count The number of the found values
+		 * \returns pointer to the array with the value between the two limits.
+		 */
+		double *getValuesBetween(const unsigned int col, const double first, const double second, int &count);
 
 		/** \brief Get the name of the n-th column
- 		 */
+		 */
 		inline string getName(const unsigned int n) {
 			if (names != NULL && n < cols)
 				return names[n];

@@ -1,5 +1,7 @@
 CFLAGS=-Wall -Werror
 LDFLAGS=
+INCROOT=$(shell root-config --incdir)
+ROOTOPT=-pthread
 
 GPP=g++
 CC=gcc
@@ -17,7 +19,7 @@ all: $(OBJECTS) $(SUBDIRS)
 	$(CC) -c $< $(CFLAGS)
 
 %.o:    %.cpp | %.h
-	$(GPP) -c $< $(CFLAGS)
+	$(GPP) -c $< $(CFLAGS) -I$(INCROOT) $(ROOTOPT)
 
 $(SUBDIRS):
 	@cd $@; $(MAKE);
