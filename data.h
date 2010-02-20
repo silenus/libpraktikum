@@ -21,7 +21,13 @@ using namespace std;
 class Data
 {
 	public:
-		/** Creates a data object from a cassy file.
+		/** \brief Creates an empty data object
+ 		 * \param[in] length The length of the data
+		 * \param[in] cols The number of columns
+		 */
+		Data(const unsigned int length, const unsigned int cols);
+
+		/** \brief Creates a data object from a cassy file.
  		 * \param[in] filename The path to the cassy file.
 		 */
 		Data(const string &filename);

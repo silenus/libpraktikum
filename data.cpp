@@ -1,5 +1,17 @@
 #include "data.h"
 
+Data::Data(const unsigned int length, const unsigned int cols) {
+	data = new double*[cols];
+	for (uint i = 0; i < cols; i++) {
+		data[i] = new double[length];
+	}
+	hasHeader = false;
+	data = NULL;
+	names = NULL;
+	symbols = NULL;
+	units = NULL;
+}
+
 Data::Data(const string &filename) {
 	posData = 0; //pointer in stream to the beginning of the data
 	
@@ -81,18 +93,18 @@ double Data::getMax(const unsigned int n) {
 	}
 }
 
-double *getValuesBetween(const unsigned int col, const double first, const double second, int &count) {
-	int i, j;
+double *Data::getValuesBetween(const unsigned int col, const double first, const double second, int &count) {
+	unsigned int i, j;
 	if (first < second) {
-		for (i = 0; data[n][i] < first && i < length-1; i++);
-		for (j = 0; data[n][j] < second && j < length-1; j++);
+		for (i = 0; data[col][i] < first && i < length-1; i++);
+		for (j = 0; data[col][j] < second && j < length-1; j++);
 	}
 	else {
-		for (i = 0; data[n][i] > first && i < length-1; i++);
-		for (j = 0; data[n][j] > second && j < length-1; j++);
+		for (i = 0; data[col][i] > first && i < length-1; i++);
+		for (j = 0; data[col][j] > second && j < length-1; j++);
 	}
 	count = j - i + 1;
-	return &data[n][i];
+	return &data[col][i];
 }
 
 
