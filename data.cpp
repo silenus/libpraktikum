@@ -5,7 +5,7 @@ Data::Data(const unsigned int length, const unsigned int cols) {
 	for (uint i = 0; i < cols; i++) {
 		data[i] = new double[length];
 	}
-	hasHeader = false;
+	_hasHeader = false;
 	data = NULL;
 	names = NULL;
 	symbols = NULL;
@@ -18,11 +18,11 @@ Data::Data(const string &filename) {
 	////////////////////////////////////////////////////////////
 	//make a quick loop through the file to gather information//
 	////////////////////////////////////////////////////////////
-	if (scanLab(filename, _length, cols, hasHeader, posData) != 0) {
+	if (scanLab(filename, _length, cols, _hasHeader, posData) != 0) {
 		cerr << "Could not scan file" << filename << endl;
 		_length = 0;
 		cols = 0;
-		hasHeader = false;
+		_hasHeader = false;
 		data = NULL;
 		names = NULL;
 		symbols = NULL;
@@ -43,7 +43,7 @@ Data::Data(const string &filename) {
 		data[i] = new double[_length];
 	}
 	//allocate space for the column-info
-	if (hasHeader)
+	if (_hasHeader)
 	{
 		names = new string[cols];
 		symbols = new string[cols];

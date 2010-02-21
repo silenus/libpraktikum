@@ -97,12 +97,18 @@ class Data
 			return _length;
 		}
 
+		/** True if the data was created by a cassy file with an header
+ 		 */
+		inline bool hasHeader() {
+			return _hasHeader;
+		}
+
 	protected:
 		/// The number of datasets
 		unsigned int _length;
 		/// The number of columns
 		unsigned int cols;
-		bool hasHeader;
+		bool _hasHeader;
 		int posData;
 
 		/// The table for the data
