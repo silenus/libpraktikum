@@ -111,7 +111,7 @@ double *Data::getValuesBetween(const unsigned int col, const double first, const
 // private functions
 //------------------------------
 
-int scanLab(string filename, unsigned int &length, unsigned int &cols, bool &hasHeader, int &posData) {
+int Data::scanLab(string filename, unsigned int &length, unsigned int &cols, bool &hasHeader, int &posData) {
 	/////////////////////////
 	//Define some variables//
 	/////////////////////////
