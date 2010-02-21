@@ -93,13 +93,13 @@ class Data
 
 		/** Get the length of the data. This is the length of each column.
  		 */
-		inline unsigned int getLength() {
-			return length;
+		inline unsigned int length() {
+			return _length;
 		}
 
 	protected:
 		/// The number of datasets
-		unsigned int length;
+		unsigned int _length;
 		/// The number of columns
 		unsigned int cols;
 		bool hasHeader;

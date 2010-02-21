@@ -18,9 +18,9 @@ Data::Data(const string &filename) {
 	////////////////////////////////////////////////////////////
 	//make a quick loop through the file to gather information//
 	////////////////////////////////////////////////////////////
-	if (scanLab(filename, length, cols, hasHeader, posData) != 0) {
+	if (scanLab(filename, _length, cols, hasHeader, posData) != 0) {
 		cerr << "Could not scan file" << filename << endl;
-		length = 0;
+		_length = 0;
 		cols = 0;
 		hasHeader = false;
 		data = NULL;
@@ -40,7 +40,7 @@ Data::Data(const string &filename) {
 	
 	//generate the arrays for the data
 	for(uint i = 0; i< cols; i++){
-		data[i] = new double[length];
+		data[i] = new double[_length];
 	}
 	//allocate space for the column-info
 	if (hasHeader)
@@ -58,7 +58,7 @@ Data::Data(const string &filename) {
 	}
 	
 	// TODO: Prope error handling, maybe with exceptions
-	readLabData(filename, length, cols, data, posData);
+	readLabData(filename, _length, cols, data, posData);
 }
 
 double Data::getMin(const unsigned int n) {
@@ -67,7 +67,7 @@ double Data::getMin(const unsigned int n) {
 		return min[n];
 	else {
 		min[n] = data[n][0];
-		for (uint i = 0; i < length; i++)
+		for (uint i = 0; i < _length; i++)
 		{
 			if (min[n] > data[n][i])
 				min[n] = data[n][i];
@@ -83,7 +83,7 @@ double Data::getMax(const unsigned int n) {
 		return max[n];
 	else {
 		max[n] = data[n][0];
-		for (uint i = 0; i < length; i++)
+		for (uint i = 0; i < _length; i++)
 		{
 			if (max[n] < data[n][i])
 				max[n] = data[n][i];
@@ -96,12 +96,12 @@ double Data::getMax(const unsigned int n) {
 double *Data::getValuesBetween(const unsigned int col, const double first, const double second, int &count) {
 	unsigned int i, j;
 	if (first < second) {
-		for (i = 0; data[col][i] < first && i < length-1; i++);
-		for (j = 0; data[col][j] < second && j < length-1; j++);
+		for (i = 0; data[col][i] < first && i < _length-1; i++);
+		for (j = 0; data[col][j] < second && j < _length-1; j++);
 	}
 	else {
-		for (i = 0; data[col][i] > first && i < length-1; i++);
-		for (j = 0; data[col][j] > second && j < length-1; j++);
+		for (i = 0; data[col][i] > first && i < _length-1; i++);
+		for (j = 0; data[col][j] > second && j < _length-1; j++);
 	}
 	count = j - i + 1;
 	return &data[col][i];
