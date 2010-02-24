@@ -133,7 +133,7 @@ class Data
 		 * \param[in] filename c++ string with filename of the labfile
 		 * \param[out] &length returns numbers of found dataset
 		 * \param[out] &cols returns numbers of data-cols found (determines the size of names, symbol unit and data)
-		 * \param[out] &hasHeader returns weather a header was found or not (if not, names, symbol and unit will remain empty)
+		 * \param[out] &hasHeader returns whether a header was found or not (if not, names, symbol and unit will remain empty)
 		 * \param[out] &posData position of the data in the data stream
 		 * \returns 0 success \n
 		 * 		1 Could not open input file \n
