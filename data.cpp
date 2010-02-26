@@ -75,32 +75,22 @@ double Data::getMin(const unsigned int col) {
 	static bool isCached = false;
 	if (isCached)
 		return min[col];
-	else {
-		min[col] = data[col][0];
-		for (uint i = 0; i < _length; i++)
-		{
-			if (min[col] > data[col][i])
-				min[col] = data[col][i];
-		}
-		isCached = true;
-		return min[col];
-	}
+	else
+		min[col] = utils::min(data[col], _length);
+
+	isCached = true;
+	return min[col];
 }
 
 double Data::getMax(const unsigned int col) {
 	static bool isCached = false;
 	if (isCached)
 		return max[col];
-	else {
-		max[col] = data[col][0];
-		for (uint i = 0; i < _length; i++)
-		{
-			if (max[col] < data[col][i])
-				max[col] = data[col][i];
-		}
-		isCached = true;
-		return max[col];
-	}
+	else
+		max[col] = utils::max(data[col], _length);
+
+	isCached = true;
+	return max[col];
 }
 
 double Data::mean(const unsigned int col) {

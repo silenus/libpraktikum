@@ -1,6 +1,5 @@
 #include "utils.h"
 
-
 double *utils::createArray(const int length, const double value) {
 	double *array = new double[length];
 	for (int i = 0; i < length; i++)
@@ -17,6 +16,24 @@ void utils::transform(double *array, const unsigned int length, const string &ex
 void utils::transform(double *array, const unsigned int length, TF1 *function) {
 	for (unsigned int i = 0; i < length; i++)
 		array[i] = function->Eval(array[i]);
+}
+
+double utils::min(double *numbers, const unsigned int length) {
+	double min = numbers[0];
+	for (unsigned int i = 0; i < length; i++) {
+		if (min > numbers[i])
+			min = numbers[i];
+	}
+	return min;
+}
+
+double utils::max(double *numbers, const unsigned int length) {
+	double max = numbers[0];
+	for (unsigned int i = 0; i < length; i++) {
+		if (max < numbers[i])
+			max = numbers[i];
+	}
+	return max;
 }
 
 double utils::sum(const double *numbers, const unsigned int length) {
