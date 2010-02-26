@@ -4,6 +4,9 @@ Data::Data(const unsigned int length, const unsigned int cols) {
 	data = new double*[cols];
 	min = new double[cols];
 	max = new double[cols];
+	_mean = new double[cols];
+	errorMean = new double[cols];
+	rms = new double[cols];
 	for (uint i = 0; i < cols; i++) {
 		data[i] = new double[length];
 	}
@@ -41,6 +44,9 @@ Data::Data(const string &filename) {
 	data = new double*[cols];
 	min = new double[cols];
 	max = new double[cols];
+	_mean = new double[cols];
+	errorMean = new double[cols];
+	rms = new double[cols];
 	
 	//generate the arrays for the data
 	for(uint i = 0; i< cols; i++){
@@ -65,36 +71,65 @@ Data::Data(const string &filename) {
 	readLabData(filename, _length, cols, data, posData);
 }
 
-double Data::getMin(const unsigned int n) {
+double Data::getMin(const unsigned int col) {
 	static bool isCached = false;
 	if (isCached)
-		return min[n];
+		return min[col];
 	else {
-		min[n] = data[n][0];
+		min[col] = data[col][0];
 		for (uint i = 0; i < _length; i++)
 		{
-			if (min[n] > data[n][i])
-				min[n] = data[n][i];
+			if (min[col] > data[col][i])
+				min[col] = data[col][i];
 		}
 		isCached = true;
-		return min[n];
+		return min[col];
 	}
 }
 
-double Data::getMax(const unsigned int n) {
+double Data::getMax(const unsigned int col) {
 	static bool isCached = false;
 	if (isCached)
-		return max[n];
+		return max[col];
 	else {
-		max[n] = data[n][0];
+		max[col] = data[col][0];
 		for (uint i = 0; i < _length; i++)
 		{
-			if (max[n] < data[n][i])
-				max[n] = data[n][i];
+			if (max[col] < data[col][i])
+				max[col] = data[col][i];
 		}
 		isCached = true;
-		return max[n];
+		return max[col];
 	}
+}
+
+double Data::mean(const unsigned int col) {
+	static bool isCached = false;
+
+	if (isCached)
+		return _mean[col];
+	else
+		_mean[col] = utils::mean(data[col], _length);
+
+	isCached = true;
+	return _mean[col];
+}
+
+double Data::mean(const unsigned int col, double &errorMean, double &rms) {
+	static bool isCached = false;
+
+	if (isCached) {
+		errorMean = this->errorMean[col];
+		rms = this->rms[col];
+		return _mean[col];
+	}
+	else
+		_mean[col] = utils::mean(data[col], _length, this->errorMean[col], this->rms[col]);
+
+	isCached = true;
+	errorMean = this->errorMean[col];
+	rms = this->rms[col];
+	return _mean[col];
 }
 
 double *Data::getValuesBetween(const unsigned int col, const double first, const double second, int &count) {
