@@ -2,6 +2,8 @@
 
 Data::Data(const unsigned int length, const unsigned int cols) {
 	data = new double*[cols];
+	min = new double[cols];
+	max = new double[cols];
 	for (uint i = 0; i < cols; i++) {
 		data[i] = new double[length];
 	}
@@ -37,6 +39,8 @@ Data::Data(const string &filename) {
 	
 	//get an array of pointers to the arrays of data
 	data = new double*[cols];
+	min = new double[cols];
+	max = new double[cols];
 	
 	//generate the arrays for the data
 	for(uint i = 0; i< cols; i++){
