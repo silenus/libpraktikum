@@ -1,5 +1,9 @@
+#include <iostream>
 #include <TF1.h>
 #include <TMath.h>
+
+/// debug macro, which prints the name and the value of the variable
+#define p(X) std::cout << #X " = " << X << std::endl;
 
 using namespace std;
 
@@ -33,4 +37,29 @@ namespace utils {
 	 * \param[in] function The mathematical function, which will be used to transform the array
 	 */
 	void transform(double *array, const unsigned int length, TF1 *function);
+
+	/** \brief Calculates the sum of an array
+ 	 * \param[in] numbers The array of numbers
+	 * \param[in] length The length of the array
+	 * \returns The sum of the array
+	 */
+	double sum(const double *numbers, const unsigned int length);
+
+	/** \brief Calculates the arithmetic mean of an array
+ 	 * \param[in] numbers The array of numbers
+	 * \param[in] length The length of the array
+	 * \returns The calculated mean
+	 */
+	inline double mean(const double *numbers, const unsigned int length) {
+		return sum(numbers, length) / length;
+	};
+
+	/** \brief Calculates the arithmetic mean and the errors of an array
+ 	 * \param[in] numbers The array of numbers
+	 * \param[in] length The length of the array
+	 * \param[out] errorMean The error of the mean
+	 * \param[out] rms The root mean square
+	 * \returns The calculated mean
+	 */
+	double mean(const double *numbers, const unsigned int length, double &errorMean, double &rms);
 }
