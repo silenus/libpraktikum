@@ -54,3 +54,29 @@ double utils::mean(const double *numbers, const unsigned int length, double &err
 	errorMean = rms / sqrt(length);
 	return mean;
 }
+
+double utils::weightedMean(const double* numbers, const double* errors, const unsigned int length, double &innerError, double &outerError) {
+	double *weights = new double[length];
+	// Calculate the weights
+	for (unsigned int i = 0; i < length; i++)
+		weights[i] = 1/ (errors[i] * errors[i]);
+
+	double sum;
+	double weightSum;
+	for (unsigned int i = 0; i < length; i++) {
+		sum += numbers[i] * weights[i];
+		weightSum += errors[i];
+	}
+	double mean = sum / weightSum;
+
+	innerError = sqrt(1 / weightSum);
+
+	double errorMean = 0;
+	outerError = 0;
+	for (unsigned int i = 0; i < length; i++)
+		errorMean += pow(numbers[i] - mean, 2) * weights[i];
+	outerError = sqrt(errorMean / ((length - 1) * weightSum));
+
+	delete weights;
+	return mean;
+}

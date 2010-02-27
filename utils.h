@@ -78,4 +78,17 @@ namespace utils {
 	 * \returns The calculated mean
 	 */
 	double mean(const double *numbers, const unsigned int length, double &errorMean, double &rms);
+
+		/**
+		 * \brief Calculate weighted mean
+		 *
+		 * This function calculates the weighted of an arrays of numbers with a given array of errors.
+		 * \param[in] numbers The array of numbers
+		 * \param[in] errors The errors of the numbers
+		 * \param[in] length The length of the arrays
+		 * \param[out] innerError The inner error of the mean
+		 * \param[out] outerError The outer error of the mean
+		 * \returns The calculated weighted mean
+		 */
+		double weightedMean(const double* numbers, const double* errors, const unsigned int length, double &innerError, double &outerError);
 }
