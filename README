@@ -1,0 +1,3 @@
+Just type make to compile the code.
+
+In tools/ you can find a simple example for using libpraktikum. The plot tool reads a given cassy file and plots the data. You can use the Makefile as an examaple to compile your own code with libpraktikum.
