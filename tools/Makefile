@@ -17,7 +17,7 @@ all: $(PROGRAMMS) $(OBJECTS) $(SUBDIRS)
 	@echo "done";
 
 plot: plot.o
-	$(GPP) $^ ../data.o -o plot -L$(LIBROOT) $(LIBS)
+	$(GPP) $^ ../data.o ../utils.o -o plot -L$(LIBROOT) $(LIBS)
 
 %.o:    %.c
 	$(CC) -c $< $(CFLAGS)
