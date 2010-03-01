@@ -122,7 +122,7 @@ double Data::mean(const unsigned int col, double &errorMean, double &rms) {
 	return _mean[col];
 }
 
-double *Data::getValuesBetween(const unsigned int col, const double first, const double second, int &count) {
+double *Data::getValuesBetween(const unsigned int col, const double first, const double second, int &count) const {
 	unsigned int i, j;
 	if (first < second) {
 		for (i = 0; data[col][i] < first && i < _length-1; i++);
@@ -140,7 +140,7 @@ double *Data::getValuesBetween(const unsigned int col, const double first, const
 // private functions
 //------------------------------
 
-int Data::scanLab(string filename, unsigned int &length, unsigned int &cols, bool &hasHeader, int &posData) {
+int Data::scanLab(string filename, unsigned int &length, unsigned int &cols, bool &hasHeader, int &posData) const {
 	/////////////////////////
 	//Define some variables//
 	/////////////////////////
@@ -262,7 +262,7 @@ int Data::scanLab(string filename, unsigned int &length, unsigned int &cols, boo
  * 		1 Could not open input file
  */
 
-int Data::readLabHeader(string filename, unsigned int cols, string* names, string* symbol, string* unit){
+int Data::readLabHeader(string filename, unsigned int cols, string* names, string* symbol, string* unit) const {
 	
 	//define string for storing a line of the input file
 	string str_line;
@@ -321,7 +321,7 @@ int Data::readLabHeader(string filename, unsigned int cols, string* names, strin
  * 		1 Could not open input file
  */
 
-int Data::readLabData(string filename, unsigned int &length, unsigned int cols, double** data, int posData){
+int Data::readLabData(string filename, unsigned int &length, unsigned int cols, double** data, int posData) const {
 	
 	int linebeg;
 	string str_line;
