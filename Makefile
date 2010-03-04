@@ -7,7 +7,7 @@ GPP=g++
 CC=gcc
 DOXY=doxygen
 
-OBJECTS=utils.o data.o
+OBJECTS=utils.o data.o linearregression.o
 SUBDIRS=
 
 .PHONY: all clean doc $(SUBDIRS)

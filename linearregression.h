@@ -1,9 +1,16 @@
+#include "options.h"
+#include "utils.h"
+
+#include <iostream>
+#include <stdio.h>
+#include <TStyle.h>
 #include <TPad.h>
 #include <TCanvas.h>
 #include <TGraph.h>
 #include <TGraphErrors.h>
 #include <TF1.h>
 #include <TH1F.h>
+#include <TPaveText.h>
 
 
 class LinearRegression {
@@ -60,6 +67,7 @@ class LinearRegression {
 
 		TF1 *linearFunction;
 		TGraph *linearGraph;
+		TPaveText *linearStatistics;
 		TGraphErrors *residualsGraph;
 		TH1F *pullsHisto;
 };
