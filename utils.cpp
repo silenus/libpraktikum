@@ -81,6 +81,29 @@ double utils::weightedMean(const double* numbers, const double* errors, const un
 	return mean;
 }
 
+unsigned int utils::countZeros(const double* y, const unsigned int length){
+	int nZeros = 0;
+	for(unsigned int i = 0; i < length; i++) {
+		if(y[i]*y[i+1] < 0)
+			nZeros++;
+	}
+	return nZeros;
+}
+
+unsigned int getZeros(const double* y,const double* x,const double* yErrors,const double* xErrors,const unsigned int length, double* xZeros, double* xZeroErrors, const unsigned int xZerosLength) {
+	unsigned int nZeros = 0;//will count the zeros
+
+	for (unsigned int i = 0; i < length && nZeros < xZerosLength; i++){
+		if(y[i]*y[i+1] < 0) {
+			xZeros[nZeros] = (x[i]*y[i+1]-x[i+1]*y[i])/(y[i+1]-y[i]);
+			xZeroErrors[nZeros] = 1/(y[i+1]-y[i])*sqrt(pow((y[i+1]*xErrors[i]),2)+pow((y[i]*xErrors[i+1]),2)+pow((x[i]-x[i+1])/(y[i+1]-y[i]),2)*(pow((y[i+1]*yErrors[i]),2)+pow((x[i+1]*yErrors[i+1]),2)));
+			//Here we still did not consider the errors due to linear approximation
+			nZeros++;
+		}
+	}
+	return nZeros;
+}
+
 string utils::printNumber(double number, double error) {
 	ostringstream result;
 	const short numberMagnitude = magnitude(number);
