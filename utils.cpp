@@ -80,3 +80,39 @@ double utils::weightedMean(const double* numbers, const double* errors, const un
 	delete weights;
 	return mean;
 }
+
+string utils::printNumber(double number, double error) {
+	ostringstream result;
+	const short numberMagnitude = magnitude(number);
+	const short errorMagnitude = magnitude(error);
+	number = roundTo(number, pow(10, errorMagnitude - 1));
+	error = roundTo(error, pow(10, errorMagnitude - 1));
+
+	result.setf(ios::showpoint);
+	result.setf(ios::fixed);
+	result.precision( -(errorMagnitude - 1) );
+	if (numberMagnitude > 5 || numberMagnitude < -3)
+		result << number / numberMagnitude << "*10^" << numberMagnitude << " #pm " << error / numberMagnitude << "*10^" << numberMagnitude;
+	else
+		result << number << " #pm " << error;
+
+	return result.str();
+}
+
+short utils::magnitude(double number) {
+	short magnitude;
+	number = TMath::Abs(number);
+	if (number >= 1)
+		for (magnitude = 0; number / pow(10, magnitude) >= 10; magnitude++);
+	else
+		for (magnitude = -1; number / pow(10, magnitude) <= 1; magnitude--);
+	return magnitude;
+}
+
+double utils::roundTo(const double number, const double roundTo) {
+	double remainder = number - static_cast<int>(number / roundTo) * roundTo;
+	if ( remainder / magnitude(remainder) < 0.5)
+		return floor(number / roundTo) * roundTo;
+	else
+		return floor(number / roundTo + 1) * roundTo;
+}

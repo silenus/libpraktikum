@@ -1,9 +1,15 @@
+#ifndef UTILS
+#define UTILS
+
 #include <iostream>
+#include <string>
+#include <sstream> // for ostringstream
+#include <stdio.h>
 #include <TF1.h>
 #include <TMath.h>
 
 /// debug macro, which prints the name and the value of the variable
-#define p(X) std::cout << #X " = " << X << std::endl;
+#define P(X) std::cout << #X " = " << X << std::endl;
 
 using namespace std;
 
@@ -21,7 +27,7 @@ namespace utils {
 	double *createArray(const int length, const double value);
 
 	/** \brief Transforms an array with a given mathematical expression
- 	 *
+	 *
 	 * This function transforms a given array in-place with a given mathematical expression. The expression needs to be in root syntax, because root is used for parsing the expression by creating a TF1 object from the expression.
 	 * \param array The double array, which will be transformed. This parameter is both input and output, since it will be transformed in-place.
 	 * \param[in] length The length of the array.
@@ -30,7 +36,7 @@ namespace utils {
 	void transform(double *array, const unsigned int length, const string &expression);
 
 	/** \brief Transforms an array with a given TF1 object.
- 	 *
+	 *
 	 * This function transforms a given array in-place with a given root TF1 object. This object can be created by a mathematical expression or with a pointer to a function.
 	 * \param array The double array, which will be transformed. This parameter is both input and output, since it will be transformed in-place.
 	 * \param[in] length The length of the array.
@@ -39,7 +45,7 @@ namespace utils {
 	void transform(double *array, const unsigned int length, TF1 *function);
 
 	/** \brief Searches an array for the minimal value.
- 	 *
+	 *
 	 * \param[in] numbers The column
 	 * \param[in] length The length of the array
 	 * \return the minimal value of the array
@@ -47,7 +53,7 @@ namespace utils {
 	double min(double *numbers, const unsigned int length);
 
 	/** \brief Searches an array for the maximal value.
- 	 *
+	 *
 	 * \param[in] numbers The column
 	 * \param[in] length The length of the array
 	 * \return the maximal value of the array
@@ -55,14 +61,14 @@ namespace utils {
 	double max(double *numbers, const unsigned int length);
 
 	/** \brief Calculates the sum of an array
- 	 * \param[in] numbers The array of numbers
+	 * \param[in] numbers The array of numbers
 	 * \param[in] length The length of the array
 	 * \returns The sum of the array
 	 */
 	double sum(const double *numbers, const unsigned int length);
 
 	/** \brief Calculates the arithmetic mean of an array
- 	 * \param[in] numbers The array of numbers
+	 * \param[in] numbers The array of numbers
 	 * \param[in] length The length of the array
 	 * \returns The calculated mean
 	 */
@@ -90,5 +96,21 @@ namespace utils {
 		 * \param[out] outerError The outer error of the mean
 		 * \returns The calculated weighted mean
 		 */
-		double weightedMean(const double* numbers, const double* errors, const unsigned int length, double &innerError, double &outerError);
+	double weightedMean(const double* numbers, const double* errors, const unsigned int length, double &innerError, double &outerError);
+
+	/* \brief Prints a number with its error
+	 *
+	 * The number is wisely rounded using the magnitude of the error.
+	 * The error is printed with one digit.
+	 * \param[in] number The number
+	 * \param[in] error The error
+	 * \returns A string with the rounded number and the error in the format number ± error
+	 */
+	string printNumber(double number, double error);
+
+	short magnitude(double number);
+
+	double roundTo(const double number, const double roundTo);
 }
+
+#endif
