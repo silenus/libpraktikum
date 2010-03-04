@@ -91,4 +91,27 @@ namespace utils {
 		 * \returns The calculated weighted mean
 		 */
 		double weightedMean(const double* numbers, const double* errors, const unsigned int length, double &innerError, double &outerError);
+	
+	/**
+	 * \count the number of zeros 
+	 * \param[in] y y-coordinates of the point set whose zeros we are interested in
+	 * \param[in] length The length of this array
+	 * \returns The number of found zeros
+	*/
+	int countZeros(const double* y,const unsigned int length);
+
+	/**
+	 * \calculate the zeros of an point set and its errors using linear interpolation
+	 * \param[in] y y-coordinates of the point set whose zeros we are interested in
+	 * \param[in] x corresponding x-coordinates 
+	 * \param[in] y-Errors Errors on the y-values
+	 * \param[in] x-Errors Errors on the x-values
+	 * \param[in] length number of entries of the arrays above
+  	 * \param[out] xZeros array in which the zeros are saved
+	 * \param[out] xZeroErrors array in which the zeros' errors are saved
+	 * \param[in] xZerosLength number of zeros you wish to find
+	 * \returns The number of found zeros
+	*/
+	int getZeros(const double* y,const double* x,const double* yErrors,const double* xErrors,const u
+nsigned int length, double* xZeros, double* xZeroErrors, const unsigned int xZerosLength);
 }
