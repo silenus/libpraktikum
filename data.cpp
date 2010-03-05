@@ -270,41 +270,41 @@ int Data::readLabHeader(string filename, unsigned int cols, string* names, strin
 	///////////////////
 	//open input file//
 	///////////////////
-	ifstream in(filename.c_str());
-	if (!in){
+	ifstream inputFile(filename.c_str());
+	if (!inputFile){
 		cout << "ERROR opening input file " << filename <<endl;
 		return 1;
 	}
 	//skip the first line 
-	getline(in, str_line);
+	getline(inputFile, str_line);
 	
 	for(unsigned int i=0; i<cols; i++){
 		do{
-			getline(in, str_line);
+			getline(inputFile, str_line);
 		}
 		while(str_line.find_first_of("qwertzuiopasdfghjklyxcvbnmQWERTZUIOPASDFGHJKLYXCVBNM")==string::npos); //< search for any letter
 		
 		//The field for "Frequenz" seems to be totally useless, ignore it
 		if(str_line.find("Frequenz")!=string::npos){
-			getline(in, str_line);
-			getline(in, str_line);
+			getline(inputFile, str_line);
+			getline(inputFile, str_line);
 			do{
-				getline(in, str_line);
+				getline(inputFile, str_line);
 			}
 			while(str_line.find_first_of("qwertzuiopasdfghjklyxcvbnmQWERTZUIOPASDFGHJKLYXCVBNM")==string::npos);
 			
 		}
 		names[i]=str_line;
 
-		getline(in, str_line);
+		getline(inputFile, str_line);
 		symbol[i]=str_line;
 		
-		getline(in, str_line);
+		getline(inputFile, str_line);
 		unit[i]=str_line;
 		
 
 	}
-	in.close();	
+	inputFile.close();
 	return 0;
 };
 
