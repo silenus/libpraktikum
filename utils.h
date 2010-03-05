@@ -98,23 +98,23 @@ namespace utils {
 		 */
 	double weightedMean(const double* numbers, const double* errors, const unsigned int length, double &innerError, double &outerError);
 
-	/**
-	 * \count the number of zeros 
+	/** \brief Count the number of zeros
 	 * \param[in] y y-coordinates of the point set whose zeros we are interested in
 	 * \param[in] length The length of this array
 	 * \returns The number of found zeros
 	*/
 	unsigned int countZeros(const double* y,const unsigned int length);
 
-	/**
-	 * \calculate the zeros of an point set and its errors using linear interpolation
+	/** Calculate the zeros of an point set and its errors using linear interpolation
 	 * \param[in] y y-coordinates of the point set whose zeros we are interested in
 	 * \param[in] x corresponding x-coordinates 
-	 * \param[in] y-Errors Errors on the y-values
-	 * \param[in] x-Errors Errors on the x-values
+	 * \param[in] yErrors Errors on the y-values
+	 * \param[in] xErrors Errors on the x-values
 	 * \param[in] length number of entries of the arrays above
 	 * \param[out] xZeros array in which the zeros are saved
-	 * \param[out] xZeroErrors array in which the zeros' errors are saved
+	 * 				Note that you need to allocate as much memory for this array as given in xZerosLength
+	 * \param[out] xZeroErrors array in which the zeros errors are saved.
+	 * 				Note that you need to allocate as much memory for this array as given in xZerosLength
 	 * \param[in] xZerosLength number of zeros you wish to find
 	 * \returns The number of found zeros
 	*/
@@ -130,8 +130,19 @@ namespace utils {
 	 */
 	string printNumber(double number, double error);
 
+	/** \brief Gives the magnitude of a number
+ 	 * \param[in] number The number
+	 * \returns The magnitude
+	 */
 	short magnitude(double number);
 
+	/** \brief Rounds a number to a given digit
+ 	 * \param[in] The number, which will be rounded
+	 * \param[in] roundTo The number, to which you want to round. \n
+	 * E.g. the number 43.523 will be rounded to 40 if roundTo ist 10
+	 * If roundTo would be 0.1 the number would be rounded to 43.5
+	 * \returns The rounded number
+	 */
 	double roundTo(const double number, const double roundTo);
 }
 
