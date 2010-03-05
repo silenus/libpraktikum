@@ -120,7 +120,7 @@ namespace utils {
 	*/
 	unsigned int getZeros(const double* y,const double* x,const double* yErrors,const double* xErrors,const unsigned int length, double* xZeros, double* xZeroErrors, const unsigned int xZerosLength);
 
-	/* \brief Prints a number with its error
+	/** \brief Prints a number with its error
 	 *
 	 * The number is wisely rounded using the magnitude of the error.
 	 * The error is printed with one digit.
@@ -137,7 +137,7 @@ namespace utils {
 	short magnitude(double number);
 
 	/** \brief Rounds a number to a given digit
- 	 * \param[in] The number, which will be rounded
+ 	 * \param[in] number The number, which will be rounded
 	 * \param[in] roundTo The number, to which you want to round. \n
 	 * E.g. the number 43.523 will be rounded to 40 if roundTo ist 10
 	 * If roundTo would be 0.1 the number would be rounded to 43.5
