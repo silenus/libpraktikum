@@ -11,6 +11,7 @@
 #include <TF1.h>
 #include <TH1F.h>
 #include <TPaveText.h>
+#include <TList.h>
 
 
 class LinearRegression {
@@ -19,6 +20,14 @@ class LinearRegression {
 		LinearRegression(const double *_x, const double *_y, const double *_xErrors, const double *_yErrors, const unsigned int _length);
 
 		LinearRegression(const double *_x, const double *_y, const unsigned int _length);
+
+		void hideResiduals();
+
+		void showResiduals();
+
+		void hidePulls();
+
+		void showPulls();
 
 		inline TCanvas *getCanvas() const {
 			return canvas;
@@ -52,6 +61,10 @@ class LinearRegression {
 			return pullsHisto;
 		}
 
+		inline TPaveText *getLinearStats() const {
+			return linearStatistics;
+		}
+
 
 	protected:
 		const double *x;
@@ -70,6 +83,9 @@ class LinearRegression {
 		TPaveText *linearStatistics;
 		TGraphErrors *residualsGraph;
 		TH1F *pullsHisto;
+
+		bool residualsVisible;
+		bool pullsVisible;
 };
 
 

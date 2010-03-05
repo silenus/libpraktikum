@@ -47,9 +47,10 @@ LinearRegression::LinearRegression(const double *_x, const double *_y, const dou
 
 	// Draw the residuals
 	canvas->cd();
-	residualsPad = new TPad("residuals", "Residuals", 0, 0, 0.5, 0.5);
+	residualsPad = new TPad("residualsPad", "Residuals", 0, 0, 0.5, 0.5);
 	residualsPad->SetGrid();
 	residualsPad->Draw();
+	residualsVisible = true;
 	residualsPad->cd();
 	residualsGraph = new TGraphErrors(length, x, residualsArray, NULL, yErrors);
 	residualsGraph->SetName("residualsGraph");
@@ -62,9 +63,10 @@ LinearRegression::LinearRegression(const double *_x, const double *_y, const dou
 
 	// Draw the pull distribution
 	canvas->cd();
-	pullsPad = new TPad("pad3", "Pad3", 0.5, 0, 1, 0.5);
+	pullsPad = new TPad("pullsPad", "Pulls", 0.5, 0, 1, 0.5);
 	pullsPad->SetGrid();
 	pullsPad->Draw();
+	pullsVisible = true;
 	pullsPad->cd();
 	pullsHisto = new TH1F("Pulls", "Pull Distribution", 50, -5, 5);
 	pullsHisto->FillN(length, pullsArray, NULL);
@@ -91,4 +93,50 @@ LinearRegression::LinearRegression(const double *_x, const double *_y, const uns
 	residualsGraph = NULL;
 	pullsPad = NULL;
 	pullsHisto = NULL;
+}
+
+void LinearRegression::hideResiduals() {
+	if (pullsVisible)
+		pullsPad->SetPad(0, 0, 1, 0.5);
+	else
+		linearPad->SetPad(0, 0, 1, 1);
+	// Remove the reference to the residualsPad from the canvas, so it isn't shown
+	canvas->GetListOfPrimitives()->Remove(residualsPad);
+	canvas->Update();
+	residualsVisible = false;
+}
+
+void LinearRegression::showResiduals() {
+	if (pullsVisible) {
+		pullsPad->SetPad(0.5, 0, 1, 0.5);
+		residualsPad->SetPad(0, 0, 0.5, 0.5);
+	} else {
+		linearPad->SetPad(0, 0.5, 1, 1);
+		residualsPad->SetPad(0, 0, 1, 0.5);
+	}
+	residualsPad->Draw();
+	residualsVisible = true;
+}
+
+void LinearRegression::showPulls() {
+	if (residualsVisible) {
+		residualsPad->SetPad(0, 0, 0.5, 0.5);
+		pullsPad->SetPad(0.5, 0, 1, 0.5);
+	} else {
+		linearPad->SetPad(0, 0.5, 1, 1);
+		pullsPad->SetPad(0, 0, 1, 0.5);
+	}
+	pullsPad->Draw();
+	residualsVisible = true;
+}
+
+void LinearRegression::hidePulls() {
+	if (residualsVisible)
+		residualsPad->SetPad(0, 0, 1, 0.5);
+	else
+		linearPad->SetPad(0, 0, 1, 1);
+	// Remove the reference to the pullsPad from the canvas, so it isn't shown
+	canvas->GetListOfPrimitives()->Remove(pullsPad);
+	canvas->Update();
+	pullsVisible = false;
 }
