@@ -7,7 +7,7 @@ Data::Data(const unsigned int length, const unsigned int cols) {
 	_mean = new double[cols];
 	errorMean = new double[cols];
 	rms = new double[cols];
-	for (uint i = 0; i < cols; i++) {
+	for (unsigned int i = 0; i < cols; i++) {
 		data[i] = new double[length];
 	}
 	_hasHeader = false;
@@ -49,7 +49,7 @@ Data::Data(const string &filename) {
 	rms = new double[cols];
 	
 	//generate the arrays for the data
-	for(uint i = 0; i< cols; i++){
+	for(unsigned int i = 0; i< cols; i++){
 		data[i] = new double[_length];
 	}
 	//allocate space for the column-info
@@ -158,20 +158,20 @@ int Data::scanLab(string filename, unsigned int &length, unsigned int &cols, boo
 	///////////////////
 	//open input file//
 	///////////////////
-	ifstream in(filename.c_str());
-	if (!in){
+	ifstream inputFile(filename.c_str());
+	if (!inputFile){
 		cout << "ERROR opening input file " << filename <<endl;
 		return 1;
 	}
 	
 	
 	//read first line
-	if(in.eof()){
+	if(inputFile.eof()){
 		eof=true;
 		str_line=("");
 	}
 	else{
-		getline(in, str_line);
+		getline(inputFile, str_line);
 		eof=false;
 	}
 	
@@ -187,15 +187,15 @@ int Data::scanLab(string filename, unsigned int &length, unsigned int &cols, boo
 	
 	//fast skip through header (until finding tabstop <=> line with data)
 	while(str_line.find("\t")==string::npos){ //<repeat while the last read line does not contain tabstop
-		posData=in.tellg(); //saves the postion of the pointer
-		if(in.eof()){
+		posData=inputFile.tellg(); //saves the postion of the pointer
+		if(inputFile.eof()){
 			eof=true;
 			str_line=("");
 			//return error code when not finding any data
 			return 2;
 		}
 		else{
-			getline(in, str_line); //< scan next line, will be analized in next repetition of loop
+			getline(inputFile, str_line); //< scan next line, will be analized in next repetition of loop
 			eof=false;
 		}
 	}
@@ -223,12 +223,12 @@ int Data::scanLab(string filename, unsigned int &length, unsigned int &cols, boo
 	//Read the next lines until it does not contain any tabstop or
 	//till eof; count the lines
 	do{
-		if(in.eof()){
+		if(inputFile.eof()){
 			eof=true;
 			str_line=("");//< fake an empty line
 		}
 		else{
-			getline(in, str_line);
+			getline(inputFile, str_line);
 			eof=false;
 		}
 		if((str_line.find("\t")!=string::npos)&&(str_line.find("NAN")==string::npos)){
@@ -240,7 +240,7 @@ int Data::scanLab(string filename, unsigned int &length, unsigned int &cols, boo
 	
 	cout << "length=" <<length << endl;
 
-	in.close();
+	inputFile.close();
 	
 	return 0;
 	
@@ -278,7 +278,7 @@ int Data::readLabHeader(string filename, unsigned int cols, string* names, strin
 	//skip the first line 
 	getline(in, str_line);
 	
-	for(uint i=0; i<cols; i++){
+	for(unsigned int i=0; i<cols; i++){
 		do{
 			getline(in, str_line);
 		}
@@ -326,31 +326,31 @@ int Data::readLabData(string filename, unsigned int &length, unsigned int cols, 
 	int linebeg;
 	string str_line;
 
-	ifstream in(filename.c_str());
-	if (!in){
+	ifstream inputFile(filename.c_str());
+	if (!inputFile){
 		cout << "ERROR opening input file " << filename <<endl;
 		return 1;
 	}
 		
-	in.seekg(posData);
+	inputFile.seekg(posData);
 		
 	cout << "starting data extraction" << endl;
 
-	for (uint i=0; i< length; i++){
+	for (unsigned int i=0; i< length; i++){
 		
 		//first look at the line, if it's OK, go to the beginning of the line and extract data
-		linebeg=in.tellg();
-		getline(in, str_line);
+		linebeg=inputFile.tellg();
+		getline(inputFile, str_line);
 		if(str_line.find("NAN")==string::npos){
-			in.seekg(linebeg);
-			for (uint j=0; j< cols; j++){
-				in >> data[j][i];
+			inputFile.seekg(linebeg);
+			for (unsigned int j=0; j< cols; j++){
+				inputFile >> data[j][i];
 			}
 		}
 		else{
-			i=i-1;		
+			i=i-1;
 		}
 	}
-	in.close();	
+	inputFile.close();
 	return 0;
 }
