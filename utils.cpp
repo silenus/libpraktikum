@@ -113,9 +113,9 @@ string utils::printNumber(double number, double error) {
 
 	result.setf(ios::showpoint);
 	result.setf(ios::fixed);
-	result.precision( -(errorMagnitude - 1) );
+	result.precision( -(numberMagnitude - errorMagnitude + 1) );
 	if (numberMagnitude > 5 || numberMagnitude < -3)
-		result << number / numberMagnitude << "*10^" << numberMagnitude << " #pm " << error / numberMagnitude << "*10^" << numberMagnitude;
+		result << number / pow(10, numberMagnitude) << "*10^" << numberMagnitude << " #pm " << error / pow(numberMagnitude, 10) << "*10^" << numberMagnitude;
 	else
 		result << number << " #pm " << error;
 
@@ -134,7 +134,7 @@ short utils::magnitude(double number) {
 
 double utils::roundTo(const double number, const double roundTo) {
 	double remainder = number - static_cast<int>(number / roundTo) * roundTo;
-	if ( remainder / magnitude(remainder) < 0.5)
+	if ( remainder / pow(10, magnitude(remainder)) < 0.5)
 		return floor(number / roundTo) * roundTo;
 	else
 		return floor(number / roundTo + 1) * roundTo;
