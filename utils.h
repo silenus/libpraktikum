@@ -136,6 +136,15 @@ namespace utils {
 	 */
 	short magnitude(double number);
 
+	/** Calculates the modulo of two doubles
+ 	 * \param[in] dividend
+	 * \param[in] divisor
+	 * \returns The remainder of dividend / divisor
+	 */
+	inline double modulo(double dividend, double divisor) {
+		return dividend - static_cast<int>(dividend / divisor) * divisor;
+	}
+
 	/** \brief Rounds a number to a given digit
  	 * \param[in] number The number, which will be rounded
 	 * \param[in] roundTo The number, to which you want to round. \n
@@ -144,6 +153,15 @@ namespace utils {
 	 * \returns The rounded number
 	 */
 	double roundTo(const double number, const double roundTo);
+
+	/** \brief Converts a number to string
+ 	 *
+	 * The number is cut after the given digits value and the remainung digits are filled with zeros
+	 * \param[in] number
+	 * \param[in] digits The significant digits, which will be in the string
+	 * \returns The string with the significant digits
+	 */
+	string toString(double number, unsigned char digits);
 }
 
 #endif

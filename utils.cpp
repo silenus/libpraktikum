@@ -111,14 +111,17 @@ string utils::printNumber(double number, double error) {
 	number = roundTo(number, pow(10, errorMagnitude - 1));
 	error = roundTo(error, pow(10, errorMagnitude - 1));
 
-	result.setf(ios::showpoint);
-	result.setf(ios::fixed);
-	result.precision( -(numberMagnitude - errorMagnitude + 1) );
-	if (numberMagnitude > 5 || numberMagnitude < -3)
-		result << number / pow(10, numberMagnitude) << "*10^" << numberMagnitude << " #pm " << error / pow(numberMagnitude, 10) << "*10^" << numberMagnitude;
-	else
-		result << number << " #pm " << error;
-
+	// Use scientific notation
+	if (numberMagnitude > 4 || numberMagnitude < -3) {
+		result << toString(number / pow(10, numberMagnitude), numberMagnitude - errorMagnitude + 2)
+			<< "*10^" << numberMagnitude << " #pm "
+			<< toString(error / pow(10, numberMagnitude), 2) << "*10^" << numberMagnitude;
+	}
+	// Use fixed notation
+	else {
+		result << toString(number, numberMagnitude - errorMagnitude + 2)
+			<< " #pm " << toString(error, 2);
+	}
 	return result.str();
 }
 
@@ -128,14 +131,66 @@ short utils::magnitude(double number) {
 	if (number >= 1)
 		for (magnitude = 0; number / pow(10, magnitude) >= 10; magnitude++);
 	else
-		for (magnitude = -1; number / pow(10, magnitude) <= 1; magnitude--);
+		for (magnitude = -1; number / pow(10, magnitude) < 1; magnitude--);
 	return magnitude;
 }
 
 double utils::roundTo(const double number, const double roundTo) {
-	double remainder = number - static_cast<int>(number / roundTo) * roundTo;
-	if ( remainder / pow(10, magnitude(remainder)) < 0.5)
+	double remainder = modulo(number, roundTo);
+	if (remainder == 0)
+		return number;
+	if ( remainder / pow(10, magnitude(remainder) + 1) < 0.5)
 		return floor(number / roundTo) * roundTo;
 	else
 		return floor(number / roundTo + 1) * roundTo;
+}
+
+string utils::toString(double number, unsigned char digits) {
+	ostringstream result;
+	short numberMagnitude = magnitude(number);
+	int i;
+	// More than 17 digits are not usefull with double
+	if (digits > 17)
+		digits = 17;
+
+	if (number < 0)
+		result << "-";
+	if (numberMagnitude >= 0) {
+		// The first digit
+		result << static_cast<int>(number / pow(10, numberMagnitude));
+		number = modulo(number, pow(10, numberMagnitude));
+		// The remaining digits until "."
+		for (i = 1; i <= numberMagnitude; i++) {
+			if (i < digits) {
+				result << static_cast<int>(number / pow(10, numberMagnitude - i));
+				number = modulo(number, pow(10, numberMagnitude - i));
+			} else {
+				// Fill the remaining digits with 0
+				result << "0";
+			}
+		}
+	} else {
+		// The 0 before "."
+		result << 0;
+	}
+	if (i < digits)
+		result << ".";
+	// The digits behind "."
+	// Fill with 0
+	int k;
+	for (k = 0; k > numberMagnitude; k--)
+		result << "0";
+	// Get the remaining digits
+	for (; i < digits - 1; i++) {
+		result << static_cast<int>(number / pow(10, numberMagnitude - i));
+		number = modulo(number, pow(10, numberMagnitude - i));
+	}
+	unsigned short lastDigit = static_cast<int>(number / pow(10, numberMagnitude - i));
+	number = modulo(number, pow(10, numberMagnitude - i));
+	// If there are several 9 behind the last digits, the last digit should probably be larger
+	if (static_cast<int>(number / pow(10, numberMagnitude - i - 3)) == 999)
+		lastDigit++;
+	result << lastDigit;
+
+	return result.str();
 }
