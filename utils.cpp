@@ -136,61 +136,39 @@ short utils::magnitude(double number) {
 }
 
 double utils::roundTo(const double number, const double roundTo) {
-	double remainder = modulo(number, roundTo);
-	if (remainder == 0)
-		return number;
-	if ( remainder / pow(10, magnitude(remainder) + 1) < 0.5)
+	double integral = 0;
+	if (modf(number / roundTo, &integral) >= 0.5)
 		return floor(number / roundTo) * roundTo;
 	else
-		return floor(number / roundTo + 1) * roundTo;
+		return ceil(number / roundTo) * roundTo;
 }
 
-string utils::toString(double number, unsigned char digits) {
-	ostringstream result;
+string utils::toString(double number, unsigned char nDigits) {
+	string result;
+	ostringstream stream;
 	short numberMagnitude = magnitude(number);
-	int i;
-	// More than 17 digits are not usefull with double
-	if (digits > 17)
-		digits = 17;
+	// Prevent an integer overflow
+	if (nDigits > 9)
+		nDigits = 9;
 
-	if (number < 0)
-		result << "-";
-	if (numberMagnitude >= 0) {
-		// The first digit
-		result << static_cast<int>(number / pow(10, numberMagnitude));
-		number = modulo(number, pow(10, numberMagnitude));
-		// The remaining digits until "."
-		for (i = 1; i <= numberMagnitude; i++) {
-			if (i < digits) {
-				result << static_cast<int>(number / pow(10, numberMagnitude - i));
-				number = modulo(number, pow(10, numberMagnitude - i));
-			} else {
-				// Fill the remaining digits with 0
-				result << "0";
-			}
-		}
+	stream << static_cast<int>(TMath::Abs(number) / pow(10, numberMagnitude - nDigits + 1));
+	result = stream.str();
+	if (nDigits - 1 <= numberMagnitude) {
+		// Fill the remaining digits with 0
+		result.insert(nDigits, numberMagnitude - nDigits + 1, '0');
 	} else {
-		// The 0 before "."
-		result << 0;
+		if (numberMagnitude < 0) {
+			result.insert(0, "0.");
+			// Fill the zeros after the point
+			result.insert(2, -numberMagnitude - 1, '0');
+		} else {
+			// Only insert the point, no zeros at all
+			result.insert(numberMagnitude + 1, 1, '.');
+		}
 	}
-	if (i < digits)
-		result << ".";
-	// The digits behind "."
-	// Fill with 0
-	int k;
-	for (k = 0; k > numberMagnitude; k--)
-		result << "0";
-	// Get the remaining digits
-	for (; i < digits - 1; i++) {
-		result << static_cast<int>(number / pow(10, numberMagnitude - i));
-		number = modulo(number, pow(10, numberMagnitude - i));
+	if (number < 0) {
+		// Insert the "-" at the beginning
+		result.insert(0, 1, '-');
 	}
-	unsigned short lastDigit = static_cast<int>(number / pow(10, numberMagnitude - i));
-	number = modulo(number, pow(10, numberMagnitude - i));
-	// If there are several 9 behind the last digits, the last digit should probably be larger
-	if (static_cast<int>(number / pow(10, numberMagnitude - i - 3)) == 999)
-		lastDigit++;
-	result << lastDigit;
-
-	return result.str();
+	return result;
 }

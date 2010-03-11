@@ -5,6 +5,7 @@
 #include <string>
 #include <sstream> // for ostringstream
 #include <stdio.h>
+#include <math.h>
 #include <TF1.h>
 #include <TMath.h>
 
@@ -158,10 +159,10 @@ namespace utils {
  	 *
 	 * The number is cut after the given digits value and the remainung digits are filled with zeros
 	 * \param[in] number
-	 * \param[in] digits The significant digits, which will be in the string
+	 * \param[in] nDigits The number of significant digits, which will be in the string. Should be smaller than 9.
 	 * \returns The string with the significant digits
 	 */
-	string toString(double number, unsigned char digits);
+	string toString(double number, unsigned char nDigits);
 }
 
 #endif
