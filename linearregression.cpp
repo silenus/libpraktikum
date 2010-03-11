@@ -6,13 +6,22 @@ LinearRegression::LinearRegression(const double *_x, const double *_y, const dou
 		return;
 	}
 	canvas = new TCanvas("canvas", "Linear Regression");
-	linearPad = new TPad("linear", "Linear Regression", 0, 0.5, 1, 1);
+	if (xErrors != NULL || yErrors != NULL) {
+		hasErrors = true;
+		linearPad = new TPad("linear", "Linear Regression", 0, 0.5, 1, 1);
+	} else {
+		hasErrors = false;
+		linearPad = new TPad("linear", "Linear Regression", 0, 0, 1, 1);
+	}
 	linearPad->SetGrid();
 	linearPad->Draw();
 	linearPad->cd();
 
 	// Create the graph of the datapoints
-	linearGraph = new TGraphErrors(length, x, y, xErrors, yErrors);
+	if (hasErrors)
+		linearGraph = new TGraphErrors(length, x, y, xErrors, yErrors);
+	else
+		linearGraph = new TGraph(length, x, y);
 	linearGraph->SetName("linearGraph");
 	linearGraph->SetTitle("Linear Regression");
 	linearGraph->SetMarkerStyle(MARKERSTYLE);
@@ -24,78 +33,59 @@ LinearRegression::LinearRegression(const double *_x, const double *_y, const dou
 	linearFunction->SetLineColor(kBlue);
 
 	// Display a statistic box with the fit parameters
-	linearStatistics = new TPaveText(0.7, 0.7, 1, 1, "NDC" );
-	char buf[64];
-	snprintf(buf, sizeof(buf), "m = %s",
-			utils::printNumber(linearFunction->GetParameter(1), linearFunction->GetParError(1)).c_str());
-	linearStatistics->AddText(buf);
-	snprintf(buf, sizeof(buf), "n = %s",
-			utils::printNumber(linearFunction->GetParameter(0), linearFunction->GetParError(0)).c_str());
-	linearStatistics->AddText(buf);
-	sprintf(buf, "#frac{#chi^{2}}{ndf} = %.1g",
-			linearFunction->GetChisquare() / linearFunction->GetNDF());
-	linearStatistics->AddText(buf);
-	linearStatistics->Draw();
+	linearStatistics = drawStats();
 
-	// Compute the residuals and the pulls
-	double *residualsArray = new double[length];
-	double *pullsArray = new double[length];
-	for (unsigned int i = 0; i < length; i++) {
-		residualsArray[i] = y[i] - linearFunction->Eval(x[i]);
-		pullsArray[i] = (y[i] - linearFunction->Eval(x[i])) / yErrors[i];
+	if (hasErrors) {
+		// Compute the residuals and the pulls
+		double *residualsArray = new double[length];
+		double *pullsArray = new double[length];
+		for (unsigned int i = 0; i < length; i++) {
+			residualsArray[i] = y[i] - linearFunction->Eval(x[i]);
+			pullsArray[i] = (y[i] - linearFunction->Eval(x[i])) / yErrors[i];
+		}
+
+		// Draw the residuals
+		canvas->cd();
+		residualsPad = new TPad("residualsPad", "Residuals", 0, 0, 0.5, 0.5);
+		residualsPad->SetGrid();
+		residualsPad->Draw();
+		residualsVisible = true;
+		residualsPad->cd();
+		residualsGraph = new TGraphErrors(length, x, residualsArray, NULL, yErrors);
+		residualsGraph->SetMarkerStyle(MARKERSTYLE);
+		residualsGraph->SetMarkerSize(MARKERSIZE);
+		residualsGraph->SetName("residualsGraph");
+		residualsGraph->SetTitle("Residuals");
+		residualsGraph->Draw("AP");
+		// Make the zero line at the residuals graph more apparent
+		double min = utils::min(x, length);
+		double max = utils::max(x, length);
+		TF1 *zero = new TF1("zero", "0", min - 0.2 * (max - min), max + 0.2 * (max - min));
+		zero->SetLineColor(kBlue);
+		zero->Draw("SAME");
+
+		// Draw the pull distribution
+		canvas->cd();
+		pullsPad = new TPad("pullsPad", "Pulls", 0.5, 0, 1, 0.5);
+		pullsPad->SetGrid();
+		pullsPad->Draw();
+		pullsVisible = true;
+		pullsPad->cd();
+		pullsHisto = new TH1F("Pulls", "Pull Distribution", 50, -5, 5);
+		pullsHisto->FillN(length, pullsArray, NULL);
+		pullsHisto->GetXaxis()->SetTitle("#sigma");
+		pullsHisto->GetYaxis()->SetTitle("n");
+		pullsHisto->Draw();
 	}
-
-	// Draw the residuals
-	canvas->cd();
-	residualsPad = new TPad("residualsPad", "Residuals", 0, 0, 0.5, 0.5);
-	residualsPad->SetGrid();
-	residualsPad->Draw();
-	residualsVisible = true;
-	residualsPad->cd();
-	residualsGraph = new TGraphErrors(length, x, residualsArray, NULL, yErrors);
-	residualsGraph->SetName("residualsGraph");
-	residualsGraph->SetTitle("Residuals");
-	residualsGraph->Draw("AP");
-	// Make the zero line at the residuals graph more apparent
-	TF1 *zero = new TF1("zero", "0");
-	zero->SetLineColor(kBlue);
-	zero->Draw("SAME");
-
-	// Draw the pull distribution
-	canvas->cd();
-	pullsPad = new TPad("pullsPad", "Pulls", 0.5, 0, 1, 0.5);
-	pullsPad->SetGrid();
-	pullsPad->Draw();
-	pullsVisible = true;
-	pullsPad->cd();
-	pullsHisto = new TH1F("Pulls", "Pull Distribution", 50, -5, 5);
-	pullsHisto->FillN(length, pullsArray, NULL);
-	pullsHisto->GetXaxis()->SetTitle("#sigma");
-	pullsHisto->GetYaxis()->SetTitle("n");
-	pullsHisto->Draw();
 }
 
-LinearRegression::LinearRegression(const double *_x, const double *_y, const unsigned int _length) : x(_x), y(_y), length(_length) {
-	canvas = new TCanvas("canvas", "Linear Regression");
-	linearPad = new TPad("linear", "Linear Regression", 0.5, 0, 1, 1);
-	linearPad->SetGrid();
-	linearPad->cd();
-
-	// Create the graph of the datapoints
-	TGraphErrors *linearGraph = new TGraphErrors(length, x, y, xErrors, yErrors);
-	linearGraph->SetName("linearGraph");
-	linearGraph->SetTitle("Linear Regression");
-	// Fit a linear function to the graph
-	linearGraph->Fit("pol1");
-	linearFunction = linearGraph->GetFunction("pol1");
-
-	residualsPad = NULL;
-	residualsGraph = NULL;
-	pullsPad = NULL;
-	pullsHisto = NULL;
-}
+/*LinearRegression::LinearRegression(const double *_x, const double *_y, const unsigned int _length) : x(_x), y(_y), length(_length) {
+	LinearRegression(_x, _y, NULL, NULL, length);
+}*/
 
 void LinearRegression::hideResiduals() {
+	if (!hasErrors)
+		return;
 	if (pullsVisible)
 		pullsPad->SetPad(0, 0, 1, 0.5);
 	else
@@ -107,6 +97,8 @@ void LinearRegression::hideResiduals() {
 }
 
 void LinearRegression::showResiduals() {
+	if (!hasErrors)
+		return;
 	if (pullsVisible) {
 		pullsPad->SetPad(0.5, 0, 1, 0.5);
 		residualsPad->SetPad(0, 0, 0.5, 0.5);
@@ -119,6 +111,8 @@ void LinearRegression::showResiduals() {
 }
 
 void LinearRegression::showPulls() {
+	if (!hasErrors)
+		return;
 	if (residualsVisible) {
 		residualsPad->SetPad(0, 0, 0.5, 0.5);
 		pullsPad->SetPad(0.5, 0, 1, 0.5);
@@ -131,6 +125,8 @@ void LinearRegression::showPulls() {
 }
 
 void LinearRegression::hidePulls() {
+	if (!hasErrors)
+		return;
 	if (residualsVisible)
 		residualsPad->SetPad(0, 0, 1, 0.5);
 	else
@@ -139,4 +135,30 @@ void LinearRegression::hidePulls() {
 	canvas->GetListOfPrimitives()->Remove(pullsPad);
 	canvas->Update();
 	pullsVisible = false;
+}
+
+void LinearRegression::setUnits(const string &n, const string &m) {
+	delete linearStatistics;
+	linearPad->cd();
+	linearStatistics = drawStats();
+}
+
+TPaveText *LinearRegression::drawStats() const {
+	TPaveText *paveText= new TPaveText(0.7, 0.7, 1, 1, "NDC" );
+	char buf[64];
+
+	snprintf(buf, sizeof(buf), "m = %s",
+			utils::printNumber(linearFunction->GetParameter(1), linearFunction->GetParError(1)).c_str());
+	paveText->AddText(buf);
+	snprintf(buf, sizeof(buf), "n = %s",
+			utils::printNumber(linearFunction->GetParameter(0), linearFunction->GetParError(0)).c_str());
+	paveText->AddText(buf);
+	if (hasErrors) {
+		sprintf(buf, "#frac{#chi^{2}}{ndf} = %.1g",
+				linearFunction->GetChisquare() / linearFunction->GetNDF());
+		paveText->AddText(buf);
+	}
+
+	paveText->Draw();
+	return paveText;
 }

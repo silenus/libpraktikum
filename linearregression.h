@@ -12,6 +12,7 @@
 #include <TH1F.h>
 #include <TPaveText.h>
 #include <TList.h>
+#include <TLatex.h>
 
 
 class LinearRegression {
@@ -19,7 +20,7 @@ class LinearRegression {
 
 		LinearRegression(const double *_x, const double *_y, const double *_xErrors, const double *_yErrors, const unsigned int _length);
 
-		LinearRegression(const double *_x, const double *_y, const unsigned int _length);
+//		LinearRegression(const double *_x, const double *_y, const unsigned int _length);
 
 		void hideResiduals();
 
@@ -61,12 +62,37 @@ class LinearRegression {
 			return pullsHisto;
 		}
 
+		inline bool getHasErrors() const {
+			return hasErrors;
+		}
+
 		inline TPaveText *getLinearStats() const {
 			return linearStatistics;
 		}
 
+		inline void setXAxis(const string &title) {
+			linearGraph->GetXaxis()->SetTitle(title.c_str());
+			if (hasErrors)
+				residualsGraph->GetXaxis()->SetTitle(title.c_str());
+		}
+
+		inline void setYAxis(const string &title) {
+			linearGraph->GetYaxis()->SetTitle(title.c_str());
+			if (hasErrors)
+				residualsGraph->GetYaxis()->SetTitle(title.c_str());
+		}
+
+		/** Print the units in the statistics box
+ 		 * \param[in] n y-intercept
+		 * \param[in] m slope
+		 */
+		void setUnits(const string &n, const string &m);
+
+
 
 	protected:
+		TPaveText *drawStats() const;
+
 		const double *x;
 		const double *y;
 		const double *xErrors;
@@ -84,6 +110,7 @@ class LinearRegression {
 		TGraphErrors *residualsGraph;
 		TH1F *pullsHisto;
 
+		bool hasErrors;
 		bool residualsVisible;
 		bool pullsVisible;
 };
