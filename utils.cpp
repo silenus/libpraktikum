@@ -18,7 +18,7 @@ void utils::transform(double *array, const unsigned int length, TF1 *function) {
 		array[i] = function->Eval(array[i]);
 }
 
-double utils::min(double *numbers, const unsigned int length) {
+double utils::min(const double *numbers, const unsigned int length) {
 	double min = numbers[0];
 	for (unsigned int i = 0; i < length; i++) {
 		if (min > numbers[i])
@@ -27,7 +27,7 @@ double utils::min(double *numbers, const unsigned int length) {
 	return min;
 }
 
-double utils::max(double *numbers, const unsigned int length) {
+double utils::max(const double *numbers, const unsigned int length) {
 	double max = numbers[0];
 	for (unsigned int i = 0; i < length; i++) {
 		if (max < numbers[i])

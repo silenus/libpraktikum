@@ -51,7 +51,7 @@ namespace utils {
 	 * \param[in] length The length of the array
 	 * \return the minimal value of the array
 	 */
-	double min(double *numbers, const unsigned int length);
+	double min(const double *numbers, const unsigned int length);
 
 	/** \brief Searches an array for the maximal value.
 	 *
@@ -59,7 +59,7 @@ namespace utils {
 	 * \param[in] length The length of the array
 	 * \return the maximal value of the array
 	 */
-	double max(double *numbers, const unsigned int length);
+	double max(const double *numbers, const unsigned int length);
 
 	/** \brief Calculates the sum of an array
 	 * \param[in] numbers The array of numbers
