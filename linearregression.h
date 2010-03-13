@@ -54,7 +54,7 @@ class LinearRegression {
 			return linearGraph;
 		}
 
-		inline TGraphErrors *getResidualsGraph() const {
+		inline TGraph *getResidualsGraph() const {
 			return residualsGraph;
 		}
 
@@ -72,17 +72,15 @@ class LinearRegression {
 
 		inline void setXAxis(const string &title) {
 			linearGraph->GetXaxis()->SetTitle(title.c_str());
-			if (hasErrors)
-				residualsGraph->GetXaxis()->SetTitle(title.c_str());
+			residualsGraph->GetXaxis()->SetTitle(title.c_str());
 		}
 
 		inline void setYAxis(const string &title) {
 			linearGraph->GetYaxis()->SetTitle(title.c_str());
-			if (hasErrors)
-				residualsGraph->GetYaxis()->SetTitle(title.c_str());
+			residualsGraph->GetYaxis()->SetTitle(title.c_str());
 		}
 
-		/** Print the units in the statistics box
+		/** Set the units in the statistics box
  		 * \param[in] n y-intercept
 		 * \param[in] m slope
 		 */
@@ -107,7 +105,7 @@ class LinearRegression {
 		TF1 *linearFunction;
 		TGraph *linearGraph;
 		TPaveText *linearStatistics;
-		TGraphErrors *residualsGraph;
+		TGraph *residualsGraph;
 		TH1F *pullsHisto;
 
 		bool hasErrors;
