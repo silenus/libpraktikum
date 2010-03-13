@@ -1,4 +1,4 @@
-CFLAGS=-Wall -Werror
+CFLAGS=-Wall -Werror -g
 LDFLAGS=
 INCROOT=$(shell root-config --incdir)
 ROOTOPT=-pthread
@@ -7,7 +7,7 @@ GPP=g++
 CC=gcc
 DOXY=doxygen
 
-OBJECTS=utils.o data.o linearregression.o
+OBJECTS=utils.o data.o linearregression.o oscillation.o
 SUBDIRS=
 
 .PHONY: all clean doc $(SUBDIRS)
