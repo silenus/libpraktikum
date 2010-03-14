@@ -163,6 +163,8 @@ namespace utils {
 	 * \returns The string with the significant digits
 	 */
 	string toString(double number, unsigned char nDigits);
+
+	void printArray(const double *array, unsigned int length);
 }
 
 #endif

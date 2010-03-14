@@ -172,3 +172,8 @@ string utils::toString(double number, unsigned char nDigits) {
 	}
 	return result;
 }
+
+void utils::printArray(const double *array, unsigned int length) {
+	for (unsigned int i = 0; i < length; i++)
+		cout << array[i] << endl;
+}
