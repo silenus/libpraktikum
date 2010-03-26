@@ -18,7 +18,7 @@
 class LinearRegression {
 	public:
 
-		LinearRegression(const double *_x, const double *_y, const double *_xErrors, const double *_yErrors, const unsigned int _length);
+		LinearRegression(const double *_x, const double *_y, const double *_xErrors, const double *_yErrors, const unsigned int _length, string name = "LinearRegression");
 
 //		LinearRegression(const double *_x, const double *_y, const unsigned int _length);
 
