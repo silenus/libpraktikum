@@ -201,7 +201,7 @@ int Data::scanLab(string filename, unsigned int &length, unsigned int &cols, boo
 	}
 	
 	//we have found first dataset (datasets must not include "NAN")
-	if(str_line.find("NAN")==string::npos){
+	if(str_line.find("NAN")==string::npos && str_line[0] != '#'){
 		length++;
 	}
 	
@@ -231,7 +231,9 @@ int Data::scanLab(string filename, unsigned int &length, unsigned int &cols, boo
 			getline(inputFile, str_line);
 			eof=false;
 		}
-		if((str_line.find("\t")!=string::npos)&&(str_line.find("NAN")==string::npos)){
+		if((str_line.find("\t")!=string::npos)
+				&& str_line.find("NAN")==string::npos
+				&& str_line[0] != '#'){
 			length++;
 		}
 	
@@ -336,16 +338,17 @@ int Data::readLabData(string filename, unsigned int &length, unsigned int cols, 
 		
 	cout << "starting data extraction" << endl;
 
-	for (unsigned int i=0; i< length; i++){
-		
+	for (unsigned int i=0; i< length; i++) {
 		//first look at the line, if it's OK, go to the beginning of the line and extract data
 		linebeg=inputFile.tellg();
 		getline(inputFile, str_line);
-		if(str_line.find("NAN")==string::npos){
+		if(str_line.find("NAN")==string::npos && str_line[0] != '#') {
 			inputFile.seekg(linebeg);
 			for (unsigned int j=0; j< cols; j++){
 				inputFile >> data[j][i];
 			}
+			// strip the line
+			getline(inputFile, str_line);
 		}
 		else{
 			i=i-1;
